@@ -1,0 +1,41 @@
+[
+    {
+        "job": [],
+        "sprite": 61,
+        "color": 1,
+        "label": "Hospital",
+        "display": 4,
+        "coords": {
+            "x": 298.7691955566406,
+            "z": 43.2608413696289,
+            "y": -584.6930541992188
+        },
+        "scale": 1.0
+    },
+    {
+        "job": [],
+        "sprite": 60,
+        "color": 3,
+        "label": "Police Station",
+        "display": 4,
+        "coords": {
+            "x": 443.8960266113281,
+            "z": 30.68957710266113,
+            "y": -984.1587524414064
+        },
+        "scale": 1.0
+    },
+    {
+        "job": [],
+        "sprite": 60,
+        "color": 5,
+        "label": "Davis Fire Department",
+        "display": 4,
+        "coords": {
+            "x": 205.5892791748047,
+            "z": 29.80322265625,
+            "y": -1651.25341796875
+        },
+        "scale": 1.0
+    }
+]
