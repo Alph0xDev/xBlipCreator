@@ -1,7 +1,8 @@
 local activeBlips = {}
 local currentBlips = currentBlips or {}
 local PlayerJob = nil
-
+local adminCache = false
+local checkedAdmin = false
 local Locale = {}
 
 local function LoadLocale(lang)
@@ -67,10 +68,33 @@ else
     end
 end
 
+local function HasAdminPermission(cb)
+    if Config.Framework == "esx" then
+        if checkedAdmin then
+            cb(adminCache)
+        else
+            -- chiedo al server se sono admin
+            TriggerServerEvent('xblipcreator:checkAdmin')
+            -- callback dall'evento
+            RegisterNetEvent('xblipcreator:checkAdminResult', function(result)
+                adminCache = result
+                checkedAdmin = true
+                cb(result)
+            end)
+        end
+    elseif Config.Framework == "qbcore" or Config.Framework == "qbox" then
+        if not QBCore then cb(false) return end
+        local playerData = QBCore.Functions.GetPlayerData()
+        cb(playerData and QBCore.Functions.HasPermission(playerData, "admin"))
+    else
+        cb(false)
+    end
+end
+
 Citizen.CreateThread(function()
     if GetResourceState('es_extended') == 'started' then
         local ESX = exports['es_extended']:getSharedObject()
-        while not ESX.IsPlayerLoaded() do Wait(100) end
+        while not ESX.IsPlayerLoaded() do Wait(1000) end
         PlayerJob = ESX.GetPlayerData().job.name
         RegisterNetEvent('esx:setJob', function(job)
             PlayerJob = job.name
@@ -173,8 +197,20 @@ end
 RegisterNetEvent('blipmanager:refreshBlips', RefreshBlips)
 
 RegisterCommand(Config.AdminCommand, function()
-    OpenBlipMenu()
+    HasAdminPermission(function(isAdmin)
+        if isAdmin then
+            OpenBlipMenu()
+        else
+            lib.notify({
+                title = L("blip_manager_title"),
+                description = L("no_permission"),
+                type = "error"
+            })
+        end
+    end)
 end, false)
+
+
 
 function OpenBlipMenu()
     if type(blipCache) ~= "table" then blipCache = {} end

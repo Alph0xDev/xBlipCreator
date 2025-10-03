@@ -16,7 +16,7 @@ if Config.Framework == "esx" then
     Citizen.CreateThread(function()
         while Framework == nil do
             local ESX = exports['es_extended']:getSharedObject()
-            Wait(100)
+            Wait(1000)
         end
     end)
 elseif Config.Framework == "qbcore" then
